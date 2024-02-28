@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>API Test</title>
+  </head>
+  <body>
+    <h1>API Test</h1>
+
+    <h2>Upload a File</h2>
+    <form id="uploadForm" enctype="multipart/form-data">
+      <input type="file" name="file" id="fileInput" />
+      <button type="submit">Upload File</button>
+    </form>
+
+    <h2>Clone Voice</h2>
+    <button id="cloneVoiceButton">Clone Voice</button>
+
+    <h2>Download Cloned Audio</h2>
+    <button id="downloadAudioButton">Download Audio</button>
+
+    <script>
+      // Function to handle form submission for file upload
+      document
+        .getElementById("uploadForm")
+        .addEventListener("submit", async (e) => {
+          e.preventDefault(); // Prevent default form submission behavior
+
+          const formData = new FormData();
+          formData.append(
+            "file",
+            document.getElementById("fileInput").files[0]
+          );
+
+          try {
+            const response = await fetch("/v1/files", {
+              method: "POST",
+              body: formData,
+            });
+            const data = await response.json();
+            console.log(data);
+          } catch (error) {
+            console.error("Error uploading file:", error.message);
+          }
+        });
+
+      // Function to trigger the voice cloning process
+      document
+        .getElementById("cloneVoiceButton")
+        .addEventListener("click", async () => {
+          try {
+            const response = await fetch("/v1/files", {
+              method: "POST",
+            });
+            const data = await response.json();
+            console.log(data);
+          } catch (error) {
+            console.error("Error cloning voice:", error.message);
+          }
+        });
+
+      // Function to download the cloned audio
+      document
+        .getElementById("downloadAudioButton")
+        .addEventListener("click", async () => {
+          try {
+            window.location.href = "/v1/cdn/audio/{AUDIO_ID}"; // Replace {AUDIO_ID} with the actual ID
+          } catch (error) {
+            console.error("Error downloading audio:", error.message);
+          }
+        });
+    </script>
+  </body>
+</html>
